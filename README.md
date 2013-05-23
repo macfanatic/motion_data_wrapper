@@ -32,10 +32,13 @@ Follow these instructions to get started on your project with MotionDataWrapper:
 1. Add the gem to your Gemfile if not done already
 2. Create a new Xcode project in the root of your RubyMotion project, add the "name.xcodeproj" file to your .gitignore file as it is not needed
 3. Inside Xcode, create a new "Data Model" file and save that in your "resources" folder for RubyMotion to automatically compile when running `rake`.
-4. Setup your entities, relationships, validations and migrations in Xcode, which is outside the scope of this tutorial.
-5. Include the `MotionDataWrapper::Delegate` module into your application delegate.  For available options to customize this behavior for injecting the needed methods to setup CoreData in your iOS/Mac project, see [this file](https://github.com/macfanatic/motion_data_wrapper/blob/master/lib/motion_data_wrapper/delegate.rb).
-6. Define your model classes in Ruby code to correspond to each entity defined in Xcode.
-7. Utilize your new model classes as documented farther down.
+4. From the "Editor" menu, select "Add Model Version..." and type whatever name you want.
+5. Select this new model version and in the attributes inspector, provide a "Core Data Model" identifier, ie "1.0"
+6. Set this version as the current version of your CoreData object model, [with these instructions](http://stackoverflow.com/a/5374485).
+7. Setup your entities, relationships, validations and migrations in Xcode, which is outside the scope of this tutorial.
+8. Include the `MotionDataWrapper::Delegate` module into your application delegate.  For available options to customize this behavior for injecting the needed methods to setup CoreData in your iOS/Mac project, see [this file](https://github.com/macfanatic/motion_data_wrapper/blob/master/lib/motion_data_wrapper/delegate.rb).
+9. Define your model classes in Ruby code to correspond to each entity defined in Xcode.
+10. Utilize your new model classes as documented farther down.
 
 ```ruby
 # app/app_delegate.rb

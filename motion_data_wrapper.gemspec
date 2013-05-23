@@ -16,4 +16,6 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
+
+  s.add_dependency("bubble-wrap")
 end

@@ -9,7 +9,7 @@ module MotionDataWrapper
       module ClassMethods
     
         def entity_description
-          @_metadata ||= UIApplication.sharedApplication.delegate.managedObjectModel.entitiesByName[name]
+          @_metadata ||= App.delegate.managedObjectModel.entitiesByName[name]
         end
     
       end

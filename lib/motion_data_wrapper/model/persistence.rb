@@ -68,7 +68,7 @@ module MotionDataWrapper
     
       def save!        
         unless context = managedObjectContext
-          context = UIApplication.sharedApplication.delegate.managedObjectContext
+          context = App.delegate.managedObjectContext
           context.insertObject(self)
         end
 

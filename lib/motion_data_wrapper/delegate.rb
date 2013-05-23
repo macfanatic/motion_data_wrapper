@@ -3,8 +3,8 @@ module MotionDataWrapper
 
     def managedObjectContext
       @managedObjectContext ||= begin
-        documentsDirectory = NSFileManager.defaultManager.URLsForDirectory(NSDocumentDirectory, inDomains:NSUserDomainMask).lastObject;
-        storeURL = documentsDirectory.URLByAppendingPathComponent("#{sqlite_store_name}.sqlite")
+        file_path = File.join App.documents_path, "#{sqlite_store_name}.sqlite"
+        storeURL = NSURL.fileURLWithPath(file_path)
 
         error_ptr = Pointer.new(:object)
         unless persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:storeURL, options:persistent_store_options, error:error_ptr)
@@ -41,7 +41,7 @@ module MotionDataWrapper
     end
 
     def sqlite_store_name
-      NSBundle.mainBundle.infoDictionary.objectForKey("CFBundleName")
+      App.name
     end
 
     def persistent_store_options

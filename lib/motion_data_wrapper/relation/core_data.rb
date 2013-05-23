@@ -13,7 +13,7 @@ module MotionDataWrapper
     
     private
     def context
-      UIApplication.sharedApplication.delegate.managedObjectContext
+      App.delegate.managedObjectContext
     end
     
     end
