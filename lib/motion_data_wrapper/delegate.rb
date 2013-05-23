@@ -45,7 +45,7 @@ module MotionDataWrapper
     end
 
     def persistent_store_options
-      nil
+      { NSMigratePersistentStoresAutomaticallyOption => true, NSInferMappingModelAutomaticallyOption => true }
     end
 
   end
