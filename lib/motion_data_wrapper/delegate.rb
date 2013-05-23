@@ -3,11 +3,8 @@ module MotionDataWrapper
 
     def managedObjectContext
       @managedObjectContext ||= begin
-        file_path = File.join App.documents_path, "#{sqlite_store_name}.sqlite"
-        storeURL = NSURL.fileURLWithPath(file_path)
-
         error_ptr = Pointer.new(:object)
-        unless persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration:nil, URL:storeURL, options:persistent_store_options, error:error_ptr)
+        unless persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: sqlite_url, options: persistent_store_options, error: error_ptr)
           raise "Can't add persistent SQLite store: #{error_ptr[0].description}"
         end
 
@@ -42,6 +39,21 @@ module MotionDataWrapper
 
     def sqlite_store_name
       App.name
+    end
+
+    def sqlite_url
+      if Object.const_defined?("UIApplication")
+        file_path = File.join App.documents_path, "#{sqlite_store_name}.sqlite"
+        NSURL.fileURLWithPath(file_path)
+      else
+        error_ptr = Pointer.new(:object)
+        unless support_dir = NSFileManager.defaultManager.URLForDirectory(NSApplicationSupportDirectory, inDomain: NSUserDomainMask, appropriateForURL: nil, create: true, error: error_ptr)
+          raise "error creating application support folder: #{error_ptr[0]}"
+        end
+        support_dir = support_dir.URLByAppendingPathComponent("/#{App.name}")
+        Dir.mkdir(support_dir.path) unless Dir.exists?(support_dir.path)
+        support_dir.URLByAppendingPathComponent("#{sqlite_store_name}.sqlite")
+      end
     end
 
     def persistent_store_options
