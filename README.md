@@ -1,10 +1,11 @@
 # MotionDataWrapper
+Easy CoreData integration for querying and persistence provided for RubyMotion projects for iOS and Mac OS X.
 
 ## Introduction
 Forked from the [mattgreen/nitron](https://github.com/mattgreen/nitron/) gem, this provides an intuitive way to query and persist data in CoreData, while letting you use the powerful Xcode data modeler and versioning tools for schema definitions.  Even includes automatatic lightweight migrations!
 
 ## Installation
-Recommended installation is to use Bundle.r
+Recommended installation is to use Bundler.
 
 ### Bundler
 
@@ -18,6 +19,33 @@ Install with bundler:
 
 ```ruby
 bundle install
+```
+
+### Xcode Data Modeler
+MotionDataWrapper does not provide schema or migration classes wrapping any of the provided tools from Apple. Instead, we load in the data model file created in Xcode and let CoreData map out the entities, relationships, validations, and migrations.  This allows you to have the full toolset provided by CoreData, without being limited by our implementation.
+
+What we do provide is an easy way to integrate with CoreData for the most common tasks, such as persistence and querying the object graph.
+
+### Getting Started
+Follow these instructions to get started on your project with MotionDataWrapper:
+
+1. Add the gem to your Gemfile if not done already
+2. Create a new Xcode project in the root of your RubyMotion project, add the "name.xcodeproj" file to your .gitignore file as it is not needed
+3. Inside Xcode, create a new "Data Model" file and save that in your "resources" folder for RubyMotion to automatically compile when running `rake`.
+4. Setup your entities, relationships, validations and migrations in Xcode, which is outside the scope of this tutorial.
+5. Include the `MotionDataWrapper::Delegate` module into your application delegate.  For available options to customize this behavior for injecting the needed methods to setup CoreData in your iOS/Mac project, see [this file](https://github.com/macfanatic/motion_data_wrapper/blob/master/lib/motion_data_wrapper/delegate.rb).
+6. Define your model classes in Ruby code to correspond to each entity defined in Xcode.
+7. Utilize your new model classes as documented farther down.
+
+```ruby
+# app/app_delegate.rb
+class AppDelegate
+  include MotionDataWrapper::Delegate
+end
+
+# app/models/post.rb
+class Post < MotionDataWrapper::Model
+end
 ```
 
 ## ActiveRecord Style Syntax
