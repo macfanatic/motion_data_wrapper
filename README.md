@@ -104,6 +104,10 @@ Task.where(...).order(...).all # array of the results
 # Dynamic Finders
 Task.find_by_status :open # returns the first task with a status of open, or nil
 Task.find_all_by_status :open # returns array containing Tasks matching that status
+
+
+# Search in a specific managed object context
+Task.with_context(bg_ctx).where(...) # searches using a specific context, default is App.delegate.managedObjectContext
 ```
 
 ### Persistence
