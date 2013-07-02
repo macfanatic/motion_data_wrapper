@@ -23,7 +23,11 @@ module MotionDataWrapper
         end
       
         def new(attributes={})
-          alloc.initWithEntity(entity_description, insertIntoManagedObjectContext:nil).tap do |model|
+          self.newWithContext(nil, attributes)
+        end        
+
+        def newWithContext(context, attributes={})
+          alloc.initWithEntity(entity_description, insertIntoManagedObjectContext:context).tap do |model|
             model.instance_variable_set('@new_record', true)
             attributes.each do |keyPath, value|
               model.setValue(value, forKey:keyPath)
