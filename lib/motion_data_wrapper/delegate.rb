@@ -43,8 +43,7 @@ module MotionDataWrapper
 
     def sqlite_url
       if Object.const_defined?("UIApplication")
-        file_path = File.join App.documents_path, "#{sqlite_store_name}.sqlite"
-        NSURL.fileURLWithPath(file_path)
+        NSURL.fileURLWithPath(sqlite_path)
       else
         error_ptr = Pointer.new(:object)
         unless support_dir = NSFileManager.defaultManager.URLForDirectory(NSApplicationSupportDirectory, inDomain: NSUserDomainMask, appropriateForURL: nil, create: true, error: error_ptr)
@@ -54,6 +53,14 @@ module MotionDataWrapper
         Dir.mkdir(support_dir.path) unless Dir.exists?(support_dir.path)
         support_dir.URLByAppendingPathComponent("#{sqlite_store_name}.sqlite")
       end
+    end
+    
+    def sqlite_path
+      @sqlite_path || File.join(App.documents_path, "#{sqlite_store_name}.sqlite")
+    end
+    
+    def sqlite_path= path
+      @sqlite_path = path
     end
 
     def persistent_store_options

@@ -4,6 +4,7 @@ module MotionDataWrapper
       @managedObjectContext = nil
       @managedObjectModel = nil
       @coordinator = nil
+      @sqlite_path = nil
       manager = NSFileManager.defaultManager
       manager.removeItemAtURL sqlite_url, error:nil if manager.fileExistsAtPath sqlite_url.path
     end
