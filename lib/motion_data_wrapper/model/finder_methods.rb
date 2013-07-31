@@ -8,71 +8,76 @@ module MotionDataWrapper
 
       module ClassMethods
 
-        def all
-          relation.to_a
+        # Delegate the simplest methods to the relation without any args
+        %w(all count destroy_all empty? exists? uniq).each do |method|
+          define_method method do
+            relation.send(method)
+          end
         end
 
-        def count
-          relation.count
-        end
-
-        def destroy_all
-          all.map &:destroy
-        end
-
+        # @param [Symbol] query part to exclude, ie :where or :limit
+        # @returns [Relation]
         def except(query_part)
           relation.except(query_part)
         end
 
-        def find(object_id)
-          raise MotionDataWrapper::RecordNotFound.new(self, object_id) unless entity = find_by_id(object_id)
-          entity
-        end
-
+        # @returns [Model] or nil
         def first
-          relation.first
+          take
         end
 
+        # @param [id] id to retrieve record by
+        # @raises [RecordNotFound]
+        # @returns [Model]
+        def find(object_id)
+          find_by_id!(object_id)
+        end
+
+        # @raises [RecordNotFound]
+        # @returns [Model]
         def first!
-          first or raise MotionDataWrapper::RecordNotFound
+          take!
         end
 
+        # @returns [Model] or nil
         def last
-          relation.last
+          relation.last.take
         end
 
+        # @raises [RecordNotFound]
+        # @returns [Model]
         def last!
-          last or raise MotionDataWrapper::RecordNotFound
+          relation.last.take!
         end
 
+        # @param [Fixnum]
+        # @returns [Relation]
         def limit(l)
           relation.limit(l)
         end
 
-        def method_missing(method, *args, &block)
-          if method.start_with?("find_by_")
-            attribute = method.gsub("find_by_", "")
-            relation.where("#{attribute} = ?", *args).first
-          elsif method.start_with?("find_all_by_")
-            attribute = method.gsub("find_all_by_", "")
-            relation.where("#{attribute} = ?", *args).to_a
-          else
-            super
-          end
-        end
-
+        # @param [Fixnum]
+        # @returns [Relation]
         def offset(o)
           relation.offset(o)
         end
 
+        # @param [Symbol] column
+        # @param @optional [Hash] options, key :ascending
+        # @returns [Relation]
         def order(*args)
           relation.order(*args)
         end
 
+        # @param [Symbol] column
+        # @returns [Array]
         def pluck(column)
           relation.pluck(column)
         end
 
+        # @param [Symbol] column
+        # @param @optional [Hash] options, key :ascending
+        # @returns [Relation]
         def reorder(*args)
           relation.except(:order).order(*args)
         end
@@ -85,19 +90,42 @@ module MotionDataWrapper
           end
         end
 
-        def uniq
-          relation.uniq
-        end
-
+        # @param [String] conditions
+        # @param [vargs] Replacements
+        # @returns [Relation]
+        # Usage:
+        #   where("title contains[cd] ?", "title")
         def where(*args)
           relation.where(*args)
         end
 
+        # @param [NSManagedObjectContext]
+        # @param [Relation]
         def with_context(ctx)
           relation.with_context(ctx)
         end
 
-      private
+        private
+
+        def method_missing(method, *args, &block)
+          if method.start_with?("find_by_")
+            attribute = method.gsub("find_by_", "").gsub("!", "")
+            chain = relation.where("#{attribute} = ?", *args)
+
+            if method.end_with?("!")
+              chain.first!
+            else
+              chain.first
+            end
+
+          elsif method.start_with?("find_all_by_")
+            attribute = method.gsub("find_all_by_", "")
+            relation.where("#{attribute} = ?", *args).to_a
+
+          else
+            super
+          end
+        end
 
         def relation
           Relation.alloc.initWithClass(self)
