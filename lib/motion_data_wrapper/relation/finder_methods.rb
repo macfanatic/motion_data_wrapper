@@ -19,6 +19,10 @@ module MotionDataWrapper
         all.map &:destroy
       end
 
+      def empty?
+        self.count == 0
+      end
+
       def except(query_part)
         case query_part.to_sym
          when :where
@@ -33,15 +37,13 @@ module MotionDataWrapper
          self
       end
 
-      def first
-        self.fetchLimit = 1
-        to_a[0]
+      def exists?
+        !empty?
       end
 
       def last
         self.fetchOffset = self.count - 1 unless self.count < 1
-        self.fetchLimit = 1
-        to_a[0]
+        self
       end
 
       def limit(l)
@@ -73,6 +75,14 @@ module MotionDataWrapper
 
          self.propertiesToFetch = [attribute_description]
          to_a.collect { |r| r[column] }
+      end
+
+      def take
+        limit(1).to_a[0]
+      end
+
+      def take!
+        take or raise RecordNotFound
       end
 
       def uniq
