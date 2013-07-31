@@ -1,4 +1,7 @@
 # MotionDataWrapper
+
+![Travis CI](https://secure.travis-ci.org/macfanatic/motion_data_wrapper.png?branch=master)
+
 Easy CoreData integration for querying and persistence provided for RubyMotion projects for iOS and Mac OS X.
 
 ## Introduction
