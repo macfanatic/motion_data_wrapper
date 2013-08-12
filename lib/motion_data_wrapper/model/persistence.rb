@@ -34,11 +34,11 @@ module MotionDataWrapper
       end
   
       def awakeFromFetch
-        after_fetch if respondsToSelector "after_fetch"
+        after_fetch if respond_to? :after_fetch
       end
 
       def awakeFromInsert
-        after_fetch if respondsToSelector "after_fetch"
+        after_fetch if respond_to? :after_fetch
       end
   
       def destroy
@@ -97,30 +97,30 @@ module MotionDataWrapper
       private
   
       def before_save_callback
-        before_save if respondsToSelector "before_save"
+        before_save if respond_to? :before_save
         @is_new_record = new_record?
         if @is_new_record
-          before_create if respondsToSelector "before_create"
+          before_create if respond_to? :before_create
         else
-          before_update if respondsToSelector "before_update"
+          before_update if respond_to? :before_update
         end
       end
   
       def after_save_callback
         if @is_new_record
-          after_create if respondsToSelector "after_create"
+          after_create if respond_to? :after_create
         else
-          after_update if respondsToSelector "after_update"
+          after_update if respond_to? :after_update
         end
-        after_save if respondsToSelector "after_save"
+        after_save if respond_to? :after_save
       end
 
       def before_destroy_callback
-        before_destroy if respondsToSelector "before_destroy"
+        before_destroy if respond_to? :before_destroy
       end
   
       def after_destroy_callback
-        after_destroy if respondsToSelector "after_destroy"
+        after_destroy if respond_to? :after_destroy
       end
   
     end
