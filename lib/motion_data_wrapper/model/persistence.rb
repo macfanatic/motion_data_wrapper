@@ -34,10 +34,12 @@ module MotionDataWrapper
       end
   
       def awakeFromFetch
+        super
         after_fetch if respond_to? :after_fetch
       end
 
       def awakeFromInsert
+        super
         after_fetch if respond_to? :after_fetch
       end
   
