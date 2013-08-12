@@ -49,8 +49,9 @@ module MotionDataWrapper
           before_destroy_callback
           context.deleteObject(self)
           error = Pointer.new(:object)
-          context.save(error)
-          after_destroy_callback
+          if context.save(error)
+            after_destroy_callback
+          end
         end
       
         @destroyed = true
