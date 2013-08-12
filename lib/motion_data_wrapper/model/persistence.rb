@@ -51,11 +51,11 @@ module MotionDataWrapper
           error = Pointer.new(:object)
           if context.save(error)
             after_destroy_callback
+            @destroyed = true
+            freeze
           end
         end
       
-        @destroyed = true
-        freeze
       end
     
       def destroyed?
