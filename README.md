@@ -60,9 +60,13 @@ MotionDataWrapper offers lots of your favorite ActiveRecord features for queryin
 ### Querying
 Most of the familiar Rails AR query methods are available, even dynamic finders, including the following:
 
+* all
 * count
-* find_all_by_**
-* find_by_**
+* empty?
+* exists?
+* find_all_by
+* find_by
+* find_by!
 * first
 * first!
 * last
@@ -71,6 +75,8 @@ Most of the familiar Rails AR query methods are available, even dynamic finders,
 * offset
 * order
 * pluck
+* take
+* take!
 * uniq
 * where
 
@@ -93,6 +99,10 @@ Task.where("title contains[cd] ?", "some").count # db call to count the objects 
 Task.count # number of tasks in the system
 
 Task.order(:title, ascending: false) # Tasks order in reverse alphabetical order on title attribute
+
+# Testing for existance
+Task.where("title contains[cd] ?", "some").exists?
+Task.where("title contains[cd] ?", "some").empty?
 
 # Overriding existing query
 scope = Task.where("status = ?", :open)
