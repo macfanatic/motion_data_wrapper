@@ -150,3 +150,37 @@ task = Task.new
 task.save # will save, true if successful, false if failed
 task.save! # will throw MotionDataWrapper::RecordNotSaved if failed, contains errors object for validation messages
 ```
+### Callbacks
+MotionDataWrapper adds support for callbacks in the object lifecycle.  Note that unlike ActiveRecord in Rails, these are not class methods that accept symbols or procs, but rather an instance method that the framework will call if defined.  None of the methods take arguments, and the return values do not alter the lifecycle in any way (open a PR if you want to add that!)
+
+There are the common ones you would expect, detailed in the following example:
+
+```ruby
+class Task MotionDataWrapper::Model
+
+  def before_create
+    puts "called once in object lifecycle"
+  end
+
+  def after_create
+    puts "called after the context was saved, if the object was inserted"
+  end
+
+  def before_update
+    puts "called every time the object is dirty and the context is saved"
+  end
+
+  def after_update
+    puts "called after the context is saved & if the object was dirty"
+  end
+
+  def before_destroy
+    puts "called before the object is destroyed"
+  end
+
+  def after_destroy
+    puts "object is removed from context, is frozen"
+  end
+
+end
+```
