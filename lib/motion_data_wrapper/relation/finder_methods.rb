@@ -41,9 +41,21 @@ module MotionDataWrapper
         !empty?
       end
 
+      def first
+        take
+      end
+
+      def first!
+        take!
+      end
+
       def last
         self.fetchOffset = self.count - 1 unless self.count < 1
-        self
+        take
+      end
+
+      def last!
+        last or raise RecordNotFound
       end
 
       def limit(l)
