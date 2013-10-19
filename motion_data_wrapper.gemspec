@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage      = "https://github.com/macfanatic/motion_data_wrapper"
   s.summary       = "Provides an easy ActiveRecord-like interface to CoreData"
   s.description   = "Forked from the mattgreen/nitron gem, this provides an intuitive way to query and persist data in CoreData, while letting you use the powerful Xcode data modeler and versioning tools for schema definitions."
+  s.license       = "MIT"
 
   s.files         = `git ls-files lib`.split("\n")
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
