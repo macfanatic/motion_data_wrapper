@@ -184,3 +184,47 @@ class Task MotionDataWrapper::Model
 
 end
 ```
+
+### Relationships and Persistence
+You define the relationships between models (one-to-one, many-to-many, optional, etc) in the Xcode CoreData modeler, and there is plenty of documentation online for using Apple's tool so there are plenty of options for reading more online.
+
+You create and name the relationship, with validations etc in the modeler, and those are exposed on the model just like in ActiveRecord for Rails.  For instance:
+
+```ruby
+
+# one to many
+matt = Person.new
+matt.addresses << Address.new(street: "123 Lane")
+matt.addresses << Address.new(country: "USA")
+matt.save!
+
+# many to one
+Address.first.person
+# => matt
+
+sax = Person.new
+sax.save!
+# raises error if validation required at least one Address for instance
+```
+
+The pain in the ass comes when you are dealing with different CoreData NSManagedObjectContext objects.  When you use `new` in MDW, you have not yet inserted the newly created object into a context, and therefore it is not persisted to disk (even when another object calls `#save`).
+
+**The core principal is that calling `#save` saves the entire context, not just the one record.  Always.**
+
+So doing something like this will fail, as `addr` is not in the same context as `matt`, when `matt` is immediately inserted into the context and attempted to be saved.:
+
+```ruby
+addr = Address.new street: "123"
+matt = Person.create address: add
+```
+
+This would work however:
+
+```ruby
+addr = Address.new street: "123"
+ctx = App.delegate.managedObjectContext
+ctx.insertObject(addr) # inserted into context, but not yet persisted
+matt = Person.create address: add
+```
+
+At least this way, both objects are in the same context, so the required relationships can be set, and then the context will save successfully.
