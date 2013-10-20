@@ -49,6 +49,28 @@ describe MotionDataWrapper::Model do
     end
   end
 
+  describe '#empty' do
+    it "should not be empty when there are records" do
+      Task.should.not.be.empty
+    end
+
+    it "should be empty when there are not matching records" do
+      task_relation_without_matches.count.should == 0
+      task_relation_without_matches.empty?.should.be == true
+    end
+  end
+
+  describe '#exists' do
+    it "should be true when there are records" do
+      Task.should.be.exists
+    end
+
+    it "should be false when there are no records" do
+      task_relation_without_matches.count.should == 0
+      task_relation_without_matches.exists?.should.be == false
+    end
+  end
+
   describe '#find' do
     it "should raise exception when object_id does not exist" do
       ->{ Task.find(100) }.should.raise MotionDataWrapper::RecordNotFound
