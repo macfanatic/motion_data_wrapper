@@ -98,6 +98,26 @@ describe MotionDataWrapper::Model do
       Task.limit(0).count.should == 2
     end
   end
+
+  describe '#offset' do
+    before { @task2 = Task.create! }
+
+    it "should return the 2nd task when using offset" do
+      Task.offset(1).first.should == @task2
+    end
+
+    it "should raise error if limit is less than zero" do
+      ->{ Task.offset(-1) }.should.raise ArgumentError
+    end
+
+    it "should return all records if offset is set to 0" do
+      Task.offset(0).count.should == 2
+    end
+
+    it "should return no tasks if the offset is too high" do
+      Task.offset(100).all.should.be.empty
+    end
+  end
 end
 
 def task_relation_without_matches
