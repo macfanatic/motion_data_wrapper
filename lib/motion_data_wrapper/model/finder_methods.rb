@@ -63,13 +63,6 @@ module MotionDataWrapper
           relation.pluck(column)
         end
 
-        # @param [Symbol] column
-        # @param @optional [Hash] options, key :ascending
-        # @returns [Relation]
-        def reorder(*args)
-          relation.except(:order).order(*args)
-        end
-
         def respond_to?(method)
           if method.start_with?("find_by_") || method.start_with?("find_all_by_")
             true

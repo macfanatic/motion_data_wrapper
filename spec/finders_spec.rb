@@ -154,6 +154,33 @@ describe MotionDataWrapper::Model do
     end
   end
 
+  describe 'ordering' do
+    before { @task2 = Task.create! title: "A task before 'First Post'" }
+
+    it "should use default ordering to return by CoreData created by" do
+      Task.all.should.be == [@task, @task2]
+    end
+
+    it "should default to ascending when specifying an order" do
+      Task.order(:title).all.should.be == [@task2, @task]
+    end
+
+    it "should allow ordering by title asc" do
+      Task.order(:title, ascending: true).all.should.be == [@task2, @task]
+    end
+
+    it "should allow ordering by title desc" do
+      Task.order(:title, ascending: false).all.should.be == [@task, @task2]
+    end
+
+    it "should allow you to reorder a relation" do
+      relation = Task.order(:title, ascending: false)
+      relation.all.should.be == [@task, @task2]
+
+      relation.reorder(:title).all.should.be == [@task2, @task]
+    end
+  end
+
   describe '#pluck' do
     it "should return array of titles" do
       titles = Task.pluck(:title)
