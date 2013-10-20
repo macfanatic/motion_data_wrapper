@@ -12,6 +12,10 @@ describe MotionDataWrapper::Model do
   describe '#all' do
     before { @task2 = Task.create! title: "Second Task" }
 
+    it "should return an array" do
+      Task.all.should.be.instance_of Array
+    end
+
     it "should return 2 tasks" do
       Task.all.should == [@task, @task2]
     end
@@ -33,6 +37,15 @@ describe MotionDataWrapper::Model do
 
     it "should return 0 when there are no matching records" do
       task_relation_without_matches.count.should == 0
+    end
+  end
+
+  describe '#destroy_all' do
+    it "should destroy all matched results" do
+      task = Task.create! id: 2
+
+      Task.where("id = ?", task.id).destroy_all
+      Task.where("id = ?", task.id).count.should == 0
     end
   end
 
