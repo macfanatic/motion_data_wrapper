@@ -75,6 +75,13 @@ describe MotionDataWrapper::Model do
       relation.except(:order).sortDescriptors.should.be.nil
     end
 
+    it "should allow ignoring :where" do
+      relation = Task.where("due >= ?", NSDate.date)
+      relation.predicate.should.not.be.nil
+
+      relation.except(:where).predicate.should.be.nil
+    end
+
     it "should raise error if type is unknown" do
       relation = Task.limit(1)
       ->{ relation.except(:garbage) }.should.raise ArgumentError
@@ -219,6 +226,23 @@ describe MotionDataWrapper::Model do
       @duplicate_task = Task.create! title: "First Task"
       Task.pluck(:title).should == ["First Task", "First Task"]
       Task.uniq.pluck(:title).should == ["First Task"]
+    end
+  end
+
+  describe '#where' do
+    it "should set a predicate on the relation" do
+      relation = Task.where("title contains ?", "First Task")
+      relation.predicate.should.not.be.nil
+
+      relation.all.should.be == [@task]
+    end
+
+    it "should allow specifying #where multiple times" do
+      relation = Task.where("title contains ?", "First Task")
+      relation.where("due >= ?", NSDate.date)
+
+      relation.predicate.should.be.instance_of NSCompoundPredicate
+      relation.predicate.compoundPredicateType.should == NSAndPredicateType
     end
   end
 end
