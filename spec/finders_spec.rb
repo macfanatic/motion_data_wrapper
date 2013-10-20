@@ -10,10 +10,7 @@ describe MotionDataWrapper::Model do
   end
 
   describe '#all' do
-
-    before do
-      @task2 = Task.create! title: "Second Task"
-    end
+    before { @task2 = Task.create! title: "Second Task" }
 
     it "should return 2 tasks" do
       Task.all.should == [@task, @task2]
@@ -25,7 +22,6 @@ describe MotionDataWrapper::Model do
   end
 
   describe '#count' do
-
     it "should return 1 for the only task" do
       Task.count.should == 1
     end
@@ -41,7 +37,6 @@ describe MotionDataWrapper::Model do
   end
 
   describe '#find' do
-
     it "should raise exception when object_id does not exist" do
       ->{ Task.find(100) }.should.raise MotionDataWrapper::RecordNotFound
     end
@@ -84,6 +79,23 @@ describe MotionDataWrapper::Model do
 
     it "should raise exception if called with bang" do
       ->{ task_relation_without_matches.last! }.should.raise MotionDataWrapper::RecordNotFound
+    end
+  end
+
+  describe '#limit' do
+    before { Task.create! }
+
+    it "should only return 1 task" do
+      Task.count.should == 2
+      Task.limit(1).count.should == 1
+    end
+
+    it "should raise error if limit is less than zero" do
+      ->{ Task.limit(-1) }.should.raise ArgumentError
+    end
+
+    it "should return all records if limit is set to 0" do
+      Task.limit(0).count.should == 2
     end
   end
 end
