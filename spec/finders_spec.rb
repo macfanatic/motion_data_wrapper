@@ -60,6 +60,27 @@ describe MotionDataWrapper::Model do
     end
   end
 
+  describe '#except' do
+    it "should allow ignoring :limit" do
+      relation = Task.limit(1)
+      relation.fetchLimit.should.be == 1
+
+      relation.except(:limit).fetchLimit.should.be == 0
+    end
+
+    it "should allow ignoring :order" do
+      relation = Task.order(:title)
+      relation.sortDescriptors.should.not.be.empty
+
+      relation.except(:order).sortDescriptors.should.be.nil
+    end
+
+    it "should raise error if type is unknown" do
+      relation = Task.limit(1)
+      ->{ relation.except(:garbage) }.should.raise ArgumentError
+    end
+  end
+
   describe '#exists' do
     it "should be true when there are records" do
       Task.should.be.exists

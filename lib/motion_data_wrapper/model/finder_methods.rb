@@ -15,12 +15,6 @@ module MotionDataWrapper
           end
         end
 
-        # @param [Symbol] query part to exclude, ie :where or :limit
-        # @returns [Relation]
-        def except(query_part)
-          relation.except(query_part)
-        end
-
         # @returns [Model] or nil
         def first
           relation.first
