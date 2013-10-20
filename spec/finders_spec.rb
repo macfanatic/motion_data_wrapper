@@ -130,6 +130,14 @@ describe MotionDataWrapper::Model do
       ->{ Task.pluck(:unknown) }.should.raise ArgumentError
     end
   end
+
+  describe '#uniq' do
+    it "should return uniq title" do
+      @duplicate_task = Task.create! title: "First Task"
+      Task.pluck(:title).should == ["First Task", "First Task"]
+      Task.uniq.pluck(:title).should == ["First Task"]
+    end
+  end
 end
 
 def task_relation_without_matches
