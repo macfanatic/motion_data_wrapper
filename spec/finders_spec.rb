@@ -2,7 +2,7 @@
 describe MotionDataWrapper::Model do
 
   before do
-    @task = Task.create! title: "Matt", id: 1
+    @task = Task.create! title: "First Task", id: 1
   end
 
   after do
@@ -116,6 +116,18 @@ describe MotionDataWrapper::Model do
 
     it "should return no tasks if the offset is too high" do
       Task.offset(100).all.should.be.empty
+    end
+  end
+
+  describe '#pluck' do
+    it "should return array of titles" do
+      titles = Task.pluck(:title)
+      titles.should.be.instance_of Array
+      titles.should.include "First Task"
+    end
+
+    it "should raise error if attribute does not exist" do
+      ->{ Task.pluck(:unknown) }.should.raise ArgumentError
     end
   end
 end
