@@ -2,7 +2,7 @@
 describe MotionDataWrapper::Model do
 
   before do
-    @task = Task.create! title: "Matt"
+    @task = Task.create! title: "Matt", id: 1
   end
 
   after do
@@ -37,6 +37,17 @@ describe MotionDataWrapper::Model do
 
     it "should return 0 when there are no matching records" do
       task_relation_without_matches.count.should == 0
+    end
+  end
+
+  describe '#find' do
+
+    it "should raise exception when object_id does not exist" do
+      ->{ Task.find(100) }.should.raise MotionDataWrapper::RecordNotFound
+    end
+
+    it "should return task when queried" do
+      Task.find(@task.id).should == @task
     end
   end
 
