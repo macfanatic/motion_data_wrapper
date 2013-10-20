@@ -89,7 +89,7 @@ Task.pluck(:assignee_id) # returns array of non-distinct values
 Task.uniq.pluck(:assignee_id) # now the array of id values is distinct
 
 Task.first # First task or nil
-Task.first! # First task or MotionDataWrapper::RecordNotFound exception
+Task.last # Last task or nil
 
 Task.limit(1) # returns one task
 Task.offset(5).limit(1) # grab the 6th task, as an array with one item in it
@@ -113,11 +113,11 @@ scope.limit(...).except(:limit)
 # Daisy Chaining
 Task.where(...).order(...).where(...).offset(10).limit(5).count # Yep, this works!
 Task.where(...).order(...).all # array of the results
+Task.where(...).first! # raises MotionDataWrapper::RecordNotFound exception
 
 # Dynamic Finders
 Task.find_by_status :open # returns the first task with a status of open, or nil
 Task.find_all_by_status :open # returns array containing Tasks matching that status
-
 
 # Search in a specific managed object context
 Task.with_context(bg_ctx).where(...) # searches using a specific context, default is App.delegate.managedObjectContext

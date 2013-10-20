@@ -21,6 +21,7 @@ tmp
 .DS_Store
 build
 *.momd
+.repl_history
 
 # YARD artifacts
 .yardoc

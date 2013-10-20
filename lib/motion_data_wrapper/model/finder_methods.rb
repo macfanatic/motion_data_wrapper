@@ -23,7 +23,7 @@ module MotionDataWrapper
 
         # @returns [Model] or nil
         def first
-          take
+          relation.first
         end
 
         # @param [id] id to retrieve record by
@@ -33,21 +33,9 @@ module MotionDataWrapper
           find_by_id!(object_id)
         end
 
-        # @raises [RecordNotFound]
-        # @returns [Model]
-        def first!
-          take!
-        end
-
         # @returns [Model] or nil
         def last
-          relation.last.take
-        end
-
-        # @raises [RecordNotFound]
-        # @returns [Model]
-        def last!
-          relation.last.take!
+          relation.last
         end
 
         # @param [Fixnum]
