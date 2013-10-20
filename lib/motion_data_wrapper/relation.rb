@@ -7,6 +7,5 @@ module MotionDataWrapper
       self.entity = klass.entity_description if init
       self
     end
-
   end
 end
