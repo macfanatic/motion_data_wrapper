@@ -89,6 +89,10 @@ module MotionDataWrapper
          to_a.collect { |r| r[column] }
       end
 
+      def reorder(*args)
+        except(:order).order(*args)
+      end
+
       def take
         limit(1).to_a[0]
       end

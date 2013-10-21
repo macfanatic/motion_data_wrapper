@@ -11,12 +11,11 @@ module MotionDataWrapper
         context.executeFetchRequest(self, error:error_ptr)
       end
 
+      private
 
-    private
-    def context
-      @ctx || App.delegate.managedObjectContext
-    end
-
+      def context
+        @ctx || App.delegate.managedObjectContext
+      end
     end
   end
 end

@@ -15,12 +15,6 @@ module MotionDataWrapper
           end
         end
 
-        # @param [Symbol] query part to exclude, ie :where or :limit
-        # @returns [Relation]
-        def except(query_part)
-          relation.except(query_part)
-        end
-
         # @returns [Model] or nil
         def first
           relation.first
@@ -63,13 +57,6 @@ module MotionDataWrapper
           relation.pluck(column)
         end
 
-        # @param [Symbol] column
-        # @param @optional [Hash] options, key :ascending
-        # @returns [Relation]
-        def reorder(*args)
-          relation.except(:order).order(*args)
-        end
-
         def respond_to?(method)
           if method.start_with?("find_by_") || method.start_with?("find_all_by_")
             true
@@ -98,17 +85,28 @@ module MotionDataWrapper
         def method_missing(method, *args, &block)
           if method.start_with?("find_by_")
             attribute = method.gsub("find_by_", "").gsub("!", "")
-            chain = relation.where("#{attribute} = ?", *args)
 
-            if method.end_with?("!")
-              chain.first!
+            if valid_attribute? attribute
+              chain = relation.where("#{attribute} = ?", *args)
+
+              if method.end_with?("!")
+                chain.first!
+              else
+                chain.first
+              end
+
             else
-              chain.first
+              super
             end
 
           elsif method.start_with?("find_all_by_")
             attribute = method.gsub("find_all_by_", "")
-            relation.where("#{attribute} = ?", *args).to_a
+
+            if valid_attribute? attribute
+              relation.where("#{attribute} = ?", *args).to_a
+            else
+              super
+            end
 
           else
             super
@@ -119,6 +117,10 @@ module MotionDataWrapper
           Relation.alloc.initWithClass(self)
         end
 
+        def valid_attribute?(attribute)
+          attributes = entity_description.properties.select { |p| p.is_a?(NSAttributeDescription) }.map { |p| p.name.to_sym }
+          attributes.include? attribute.to_sym
+        end
       end
 
     end
