@@ -5,7 +5,6 @@ describe 'MotionDataWrapper::Model scoping' do
   end
 
   describe 'starting from class' do
-
     it "#scope should define a class method" do
       Task.should.respond_to :mine
     end
@@ -42,6 +41,17 @@ describe 'MotionDataWrapper::Model scoping' do
 
       relation.count.should.be == 2
       relation.overdue.count.should.be == 1
+    end
+  end
+
+  describe 'redefing existing method' do
+    it "should raise error if redefining existing class method" do
+      should.raise(ArgumentError) { Task.send :scope, :create, ->{} }
+    end
+
+    it "should raise error if redefining existing instance method on Relation" do
+      # Task.first! does not exist, but does exist on relation
+      should.raise(ArgumentError) { Task.send :scope, :first!, ->{} }
     end
   end
 end

@@ -25,6 +25,9 @@ module MotionDataWrapper
           raise ArgumentError, "'#{name}' must be a Symbol" unless name.is_a?(Symbol)
           raise ArgumentError, "'#{proc}' must be a Proc" unless proc.is_a?(Proc)
 
+          raise ArgumentError, "cannot redefine class method '#{name}'" if respond_to?(name)
+          raise ArgumentError, "cannot redefine '#{name}' method on Relation" if Relation.instance_methods.include? name
+
           define_singleton_method name, &proc
           Relation.send :define_method, name, &proc
         end
