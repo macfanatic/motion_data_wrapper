@@ -150,6 +150,28 @@ task = Task.new
 task.save # will save, true if successful, false if failed
 task.save! # will throw MotionDataWrapper::RecordNotSaved if failed, contains errors object for validation messages
 ```
+
+### Scopes
+Scopes allow you to store named queries as class methods on your model as well as an instance method on the returned Relation for chainability.  You can combine scopes to construct complex queries quickly, and keep your query logic DRY.
+
+```ruby
+class Task
+  scope :overdue, ->{ where "date < ?", NSDate.date }
+end
+
+Task.overdue
+# => Relation
+
+Task.overdue.count
+# => 0
+
+Task.where("title = ?", "My Task").overdue
+# => Relation
+
+Task.overdue.exists?
+# => false
+```
+
 ### Callbacks
 MotionDataWrapper adds support for callbacks in the object lifecycle.  Note that unlike ActiveRecord in Rails, these are not class methods that accept symbols or procs, but rather an instance method that the framework will call if defined.  None of the methods take arguments, and the return values do not alter the lifecycle in any way (open a PR if you want to add that!)
 
