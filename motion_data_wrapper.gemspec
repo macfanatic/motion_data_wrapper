@@ -13,10 +13,12 @@ Gem::Specification.new do |s|
   s.description   = "Forked from the mattgreen/nitron gem, this provides an intuitive way to query and persist data in CoreData, while letting you use the powerful Xcode data modeler and versioning tools for schema definitions."
   s.license       = "MIT"
 
-  s.files         = `git ls-files lib`.split("\n")
-  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
+  s.files         = Dir["lib/**/*"] + ["README.md"]
+  s.test_files    = Dir["spec/**/*"]
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
 
-  s.add_dependency("bubble-wrap")
+  s.add_dependency "bubble-wrap"
+  
+  s.add_development_dependency "rake"
 end
